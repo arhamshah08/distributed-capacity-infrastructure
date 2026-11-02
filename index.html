@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="author" content="Arham Shah">
+<meta name="description" content="Research paper by Arham Shah on discovering, valuing, and verifying distributed energy capacity through open-standards dispatch.">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Distributed Capacity Infrastructure | Arham Shah</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;600&display=swap">
+
+<style>
+/* Layout: journal-style single column on a white page; figures span the text width; side index on wide screens.
+   Deliberately single (light) theme: a printed paper. */
+:root {
+  --ink:    #111111;
+  --muted:  #4d4d4d;
+  --light:  #767676;
+  --rule:   #d6d6d6;
+  --accent: #157f5b;
+  --bg:     #ffffff;
+  --serif:  'STIX Two Text', 'Times New Roman', Times, serif;
+  --sans:   'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+  padding-block: 48px 64px;
+}
+a { color: inherit; text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.paper { max-width: 760px; margin: 0 auto; counter-reset: section; }
+
+/* ── Title block ── */
+.titleblock { text-align: center; padding-bottom: 22px; border-bottom: 1px solid var(--ink); }
+h1 { font-size: 25px; font-weight: 700; line-height: 1.22; text-wrap: balance; margin-bottom: 8px; }
+.subtitle { font-size: 16px; font-style: italic; color: var(--muted); text-wrap: balance; margin-bottom: 16px; }
+.author { font-size: 15px; font-weight: 600; }
+.affil { font-size: 14px; color: var(--muted); }
+
+/* ── Abstract, highlights, keywords ── */
+.abstract { margin: 22px 0 0; font-size: 14px; line-height: 1.5; }
+.abstract p { margin-bottom: 7px; text-align: justify; hyphens: auto; }
+.label { font-weight: 700; }
+.keywords { font-size: 14px; margin-top: 10px; }
+.highlights { margin-top: 16px; font-size: 14px; }
+.highlights ul { margin: 4px 0 0 20px; }
+.highlights li { margin-bottom: 3px; }
+
+/* ── Contents ── */
+.contents { margin-top: 22px; padding: 14px 0 16px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--ink); font-size: 14px; }
+.contents .label { display: block; margin-bottom: 6px; }
+.toc { list-style: none; columns: 2; column-gap: 32px; }
+.toc > li { break-inside: avoid; margin-bottom: 6px; }
+.toc .n { display: inline-block; width: 20px; }
+.toc ul { list-style: none; margin-left: 20px; color: var(--muted); font-size: 13px; }
+.lof { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.lof a { white-space: nowrap; }
+@media (max-width: 600px) { .toc { columns: 1; } }
+
+/* ── Headings ── */
+h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 30px 0 8px;
+  line-height: 1.25;
+  counter-increment: section;
+  counter-reset: subsection;
+  scroll-margin-top: 20px;
+}
+h2::before { content: counter(section) "\2003"; }
+h2.unnum { counter-increment: none; }
+h2.unnum::before { content: none; }
+h3 {
+  font-size: 15px;
+  font-weight: 700;
+  font-style: italic;
+  margin: 18px 0 5px;
+  counter-increment: subsection;
+  scroll-margin-top: 20px;
+}
+h3::before { content: counter(section) "." counter(subsection) "\2003"; font-style: normal; }
+
+p { margin-bottom: 9px; text-align: justify; hyphens: auto; }
+code { font-family: 'Courier New', monospace; font-size: 13px; }
+.cite { color: var(--accent); }
+
+/* ── Tables (booktabs) ── */
+.tbl { margin: 16px 0 18px; }
+.cap { font-size: 13px; line-height: 1.4; color: var(--ink); }
+.cap b { font-weight: 700; }
+.tbl .cap { margin-bottom: 5px; }
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.38; }
+thead th { border-top: 1.5px solid var(--ink); border-bottom: 0.75px solid var(--ink); padding: 5px 8px; text-align: left; font-weight: 700; }
+td { padding: 4px 8px; vertical-align: top; }
+tbody tr:first-child td { padding-top: 6px; }
+tbody tr:last-child td { border-bottom: 1.5px solid var(--ink); padding-bottom: 6px; }
+td.num { white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; }
+th:first-child, td:first-child { padding-left: 0; }
+th:last-child, td:last-child { padding-right: 0; }
+
+/* ── Figures ── */
+.fig { margin: 18px 0 20px; }
+.fig-scroll { overflow-x: auto; }
+.fig svg { display: block; width: 100%; height: auto; min-width: 540px; }
+.fig figcaption { margin-top: 6px; }
+.fig text { font-family: var(--sans); font-size: 11.5px; fill: #111; }
+.fig .sm { font-size: 10.5px; fill: #4d4d4d; }
+.fig .b { font-weight: 600; }
+.fig .pl { font-weight: 600; font-size: 12px; }
+.fig .wt { fill: #fff; }
+.fig .k { stroke: #111; stroke-width: 1; fill: none; }
+.fig .k2 { stroke: #111; stroke-width: 1.6; fill: none; }
+.fig .g { stroke: #8a8a8a; stroke-width: 1; fill: none; }
+.fig .grid { stroke: #e4e4e4; stroke-width: 1; fill: none; }
+.fig .d { stroke-dasharray: 4 3; }
+.fig .box { fill: #fff; stroke: #111; stroke-width: 1; }
+.fig .boxs { fill: #f3f3f3; stroke: #111; stroke-width: 1; }
+.fig .boxd { fill: #dcdcdc; stroke: #111; stroke-width: 1; }
+.fig .f1 { fill: #3d3d3d; }
+.fig .f2 { fill: #8f8f8f; }
+.fig .f3 { fill: #c9c9c9; }
+.fig .fa { fill: var(--accent); }
+.fig .fw { fill: #fff; stroke: #111; stroke-width: 1; }
+.fig .mk { fill: #111; }
+
+ol.reasons { margin: 4px 0 10px 22px; }
+ol.reasons li { margin-bottom: 5px; padding-left: 2px; text-align: justify; }
+
+/* ── References ── */
+ol.refs { font-size: 13px; line-height: 1.45; margin-left: 28px; }
+ol.refs li { margin-bottom: 3px; padding-left: 4px; }
+.datanote { font-size: 13px; color: var(--muted); margin-top: 10px; }
+.page-line { margin-top: 28px; padding-top: 8px; border-top: 1px solid var(--rule); font-size: 12.5px; color: var(--light); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; }
+
+/* ── Side index (wide screens) ── */
+.side { position: fixed; top: 52px; left: max(16px, calc(50% - 380px - 220px)); width: 180px; font-family: var(--sans); font-size: 13px; line-height: 1.35; display: none; }
+.side .label { display: block; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--light); }
+.side ol { list-style: none; display: grid; gap: 7px; }
+.side a { display: grid; grid-template-columns: 18px minmax(0, 1fr); color: var(--light); }
+.side a:hover, .side a.on { color: var(--ink); text-decoration: none; }
+@media (min-width: 1240px) { .side { display: block; } }
+</style>
+
+<nav class="side" aria-label="Section index">
+  <span class="label">Contents</span>
+  <ol>
+    <li><a href="#s1"><span>1</span><span>Three-layer capacity problem</span></a></li>
+    <li><a href="#s2"><span>2</span><span>Capacity valuation</span></a></li>
+    <li><a href="#s3"><span>3</span><span>Open-standards infrastructure</span></a></li>
+    <li><a href="#s4"><span>4</span><span>Data center forcing function</span></a></li>
+    <li><a href="#s5"><span>5</span><span>Climate impact</span></a></li>
+    <li><a href="#s6"><span>6</span><span>Evidence and current stage</span></a></li>
+    <li><a href="#refs"><span></span><span>References</span></a></li>
+  </ol>
+</nav>
+
+<article class="paper">
+
+<header class="titleblock">
+  <h1>Distributed Capacity Infrastructure: Unlocking Grid Flexibility Through Open-Standards Dispatch</h1>
+  <div class="subtitle">Discovery, valuation, and verification of distributed energy capacity in the data center era</div>
+  <div class="author">Arham Shah</div>
+  <div class="affil">M.S. Energy Resources Engineering, Stanford University</div>
+  <div class="affil">November 2026</div>
+</header>
+
+<section class="abstract" aria-label="Abstract">
+  <p><span class="label">Abstract.</span> Data center load growth, estimated at 50–100 GW in North America over the coming decade, stresses grid capacity at three nested layers at once: distribution hosting capacity, transmission tie limits, and generation adequacy. Distributed energy resources (DERs) already installed behind the meter could relieve all three, but operators cannot count them: an asset whose presence, availability, and response cannot be verified earns no hosting-capacity credit, no ELCC credit, and no market settlement.</p>
+  <p>The gap persists because each DER manufacturer exposes a proprietary cloud API, so every aggregator rebuilds the same integrations and no single party captures enough of the value of a common layer to build one. IEEE 2030.5 is the default utility-to-DER protocol under CPUC Rule 21, yet production gateways implement only one of its two roles, and OEM-cloud dispatch cannot meet the rate, custody, and audit requirements that FERC Order 2222 settlement imposes.</p>
+  <p>DC OPF with N-1 screening of the Bay Area subnetwork of the ACTIVSg10k case (703 buses, 12,564 MW peak load, 7,987 MW local generation) shows 36% of peak load imported across 42 tie branches, 3 of which bind at peak. An enrollment model of 360 synthetic households in MCE territory finds 242 kW of qualifying flexible capacity whose data confidence rises from 53% to 97% at IEEE 2030.5 enrollment, implying about 96 MW addressable across MCE's 134,131 households with installed devices. A bidirectional edge-gateway architecture specified against IEEE 2030.5, IEEE 1547-2018, OpenADR, and FERC Order 2222 closes the verification gap at the device.</p>
+  <p>At 100,000 enrolled assets (about 2.5 GW), direct displacement of marginal gas generation is 0.15–0.20 MtCO₂e/yr; curtailment recovery and infrastructure deferral raise the system effect to about 5×, or 0.75–1.0 MtCO₂e/yr. The rate-limiting step is the open dispatch layer, not hardware: more than 100 million DERs are already deployed worldwide.</p>
+  <p class="keywords"><span class="label">Keywords:</span> distributed energy resources; IEEE 2030.5; FERC Order 2222; hosting capacity; virtual power plants; data center load; resource adequacy</p>
+  <div class="highlights">
+    <span class="label">Highlights</span>
+    <ul>
+      <li>3 of 42 tie branches bind at peak in a 703-bus Bay Area subnetwork that imports 36% of its peak load.</li>
+      <li>IEEE 2030.5 enrollment raises modeled data confidence from 53% to 97% and bankable capacity by 1.8×.</li>
+      <li>About 96 MW of flexible capacity is addressable in MCE territory using devices already installed.</li>
+      <li>Verified dispatch at 100,000 assets displaces 0.15–0.20 MtCO₂e/yr directly and about 5× that at system level.</li>
+    </ul>
+  </div>
+</section>
+
+<nav class="contents" aria-label="Contents">
+  <span class="label">Contents</span>
+  <ol class="toc">
+    <li><span class="n">1</span><a href="#s1">The Three-Layer Capacity Problem</a>
+      <ul><li><a href="#s1-1">1.1 Distribution capacity</a></li><li><a href="#s1-2">1.2 Transmission capacity</a></li><li><a href="#s1-3">1.3 Generation capacity</a></li></ul></li>
+    <li><span class="n">2</span><a href="#s2">A Framework for Distributed Capacity Valuation</a>
+      <ul><li><a href="#s2-1">2.1 Grid value and data confidence</a></li><li><a href="#s2-2">2.2 Site scoring for distributed storage</a></li></ul></li>
+    <li><span class="n">3</span><a href="#s3">Open-Standards Infrastructure as the Capacity Commons</a>
+      <ul><li><a href="#s3-1">3.1 The standards stack</a></li><li><a href="#s3-2">3.2 The bidirectionality problem</a></li><li><a href="#s3-3">3.3 Why edge beats cloud</a></li><li><a href="#s3-4">3.4 Network effects of standardization</a></li></ul></li>
+    <li><span class="n">4</span><a href="#s4">Data Center Flexibility as the Forcing Function</a>
+      <ul><li><a href="#s4-1">4.1 The siting problem as a power flow problem</a></li><li><a href="#s4-2">4.2 Revenue across three capacity markets</a></li></ul></li>
+    <li><span class="n">5</span><a href="#s5">Climate Impact</a>
+      <ul><li><a href="#s5-1">5.1 Direct dispatch displacement</a></li><li><a href="#s5-2">5.2 Renewable curtailment reduction</a></li><li><a href="#s5-3">5.3 Infrastructure deferral</a></li></ul></li>
+    <li><span class="n">6</span><a href="#s6">Evidence and Current Stage</a>
+      <ul><li><a href="#s6-1">6.1 Evidence from the analyses</a></li><li><a href="#s6-2">6.2 Why the gap persists</a></li><li><a href="#s6-3">6.3 Open research questions</a></li></ul></li>
+    <li><span class="n"></span><a href="#refs">References</a></li>
+  </ol>
+  <div class="lof"><b>Figures:</b> <a href="#f1">1</a> three-layer mechanism · <a href="#f2">2</a> Bay Area peak balance · <a href="#f3">3</a> bankable capacity · <a href="#f4">4</a> gateway architecture · <a href="#f5">5</a> failure domains · <a href="#f6">6</a> dispatch sequence · <a href="#f7">7</a> revenue ranges · <a href="#f8">8</a> climate effect. <b>Tables:</b> <a href="#t1">1</a> valuation · <a href="#t2">2</a> standards · <a href="#t3">3</a> markets · <a href="#t4">4</a> climate pathways.</div>
+</nav>
+
+<main>
+
+<h2 id="s1">The Three-Layer Capacity Problem</h2>
+
+<p>Grid capacity is usually discussed as one bottleneck: interconnection queues, transmission congestion, or resource adequacy. It is three nested constraints, and relief at one layer moves the binding constraint to the next. Figure 1 shows the mechanism that ties them together.</p>
+
+<figure class="fig" id="f1">
+  <div class="fig-scroll">
+  <svg viewBox="0 0 700 300" role="img" aria-label="Figure 1: data center load stresses generation, transmission and distribution capacity, while installed DERs are not counted at any of the three layers because they cannot be verified.">
+    <defs><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs>
+    <path d="M0 22H700M0 102H700M0 182H700M0 262H700" class="grid"/>
+    <text x="0" y="56" class="b">Generation</text><text x="0" y="72" class="sm">LOLP, ELCC</text>
+    <text x="0" y="136" class="b">Transmission</text><text x="0" y="152" class="sm">N-1 tie-branch limits</text>
+    <text x="0" y="216" class="b">Distribution</text><text x="0" y="232" class="sm">ICA hosting capacity</text>
+
+    <line x1="320" y1="270" x2="320" y2="30" class="k2" marker-end="url(#m1)"/>
+    <text x="332" y="58">reserve margin falls</text><text x="332" y="73" class="sm">LOLP deteriorates</text>
+    <text x="332" y="138">tie loading rises</text><text x="332" y="153" class="sm">3 of 42 ties bind at peak</text>
+    <text x="332" y="218">feeder headroom consumed</text><text x="332" y="233" class="sm">12–24 month interconnection delay</text>
+    <text x="320" y="288" text-anchor="middle" class="b">Data center load, +50–100 GW</text>
+
+    <line x1="560" y1="270" x2="560" y2="30" class="g d"/>
+    <circle cx="560" cy="62" r="4" class="fw"/><circle cx="560" cy="142" r="4" class="fw"/><circle cx="560" cy="222" r="4" class="fw"/>
+    <text x="572" y="58">no ELCC credit</text><text x="572" y="73" class="sm">availability unverified</text>
+    <text x="572" y="138">not settleable</text><text x="572" y="153" class="sm">no audit-grade telemetry</text>
+    <text x="572" y="218">absent from ICA</text><text x="572" y="233" class="sm">not visible to planner</text>
+    <text x="560" y="288" text-anchor="middle" class="b">Installed DERs, unverified</text>
+  </svg>
+  </div>
+  <figcaption class="cap"><b>Figure 1.</b> The same new load stresses all three layers. Installed DER capacity that could relieve each layer is excluded at every one for the same reason: it cannot be verified.</figcaption>
+</figure>
+
+<h3 id="s1-1">Distribution Capacity</h3>
+
+<p>A feeder's hosting capacity is the DER export it can absorb before voltage or thermal limits bind. PG&amp;E publishes it through Integration Capacity Analysis (ICA) at the circuit level <span class="cite">[11]</span>, but as a static snapshot, while the true limit moves hour by hour with load and solar output. Midday export reverses flow through distribution transformers and raises secondary voltage at points the feeder head never sees. Static limits applied to a dynamic system deny connections that would be safe in most hours of the year, and for large loads seeking distribution-voltage service the same conservatism adds 12–24 months to interconnection.</p>
+
+<h3 id="s1-2">Transmission Capacity</h3>
+
+<p>DC OPF with N-1 contingency screening on the Bay Area subnetwork of the ACTIVSg10k synthetic Western Interconnection case <span class="cite">[1]</span>, solved in MATPOWER 8.0 <span class="cite">[2]</span>, sets the scale of the transmission constraint (Figure 2). The subnetwork holds 703 buses and 12,564 MW of peak load against 7,987 MW of local generation (6,714 MW gas, 1,033 MW wind, 240 MW coal). The 4,577 MW difference, 36% of peak load, must be imported across 42 tie branches. Of 11,806 branch contingencies screened, 3 tie branches bind at peak. Headroom on those 3 branches during peak hours, not annual energy, sets how much new load the region can accept.</p>
+
+<figure class="fig" id="f2">
+  <div class="fig-scroll">
+  <svg viewBox="0 0 700 236" role="img" aria-label="Figure 2: peak load of 12,564 MW is met by 6,714 MW gas, 1,033 MW wind, 240 MW coal and a 4,577 MW import; 3 of 42 tie branches bind at peak.">
+    <text x="0" y="14" class="pl">(a) Peak balance, MW</text>
+    <path d="M174.3 26V140M258.6 26V140M342.9 26V140M427.1 26V140M511.4 26V140M595.7 26V140M680 26V140" class="grid"/>
+    <text x="0" y="53">Load</text>
+    <rect x="90" y="38" width="529.5" height="22" class="f1"/>
+    <text x="625.5" y="54">12,564</text>
+    <text x="0" y="103">Supply</text>
+    <rect x="90" y="88" width="282.9" height="22" class="f1"/>
+    <rect x="372.9" y="88" width="43.5" height="22" class="f2"/>
+    <rect x="416.4" y="88" width="10.1" height="22" class="f3"/>
+    <rect x="426.5" y="88" width="192.9" height="22" class="fa"/>
+    <text x="98" y="103" class="wt">Gas 6,714</text>
+    <text x="434" y="103" class="wt">Import 4,577 (36%)</text>
+    <path d="M394.6 110v6M421.5 110v6" class="k"/>
+    <text x="392" y="127" text-anchor="end" class="sm">Wind 1,033</text>
+    <text x="426" y="127" class="sm">Coal 240</text>
+    <line x1="90" y1="140" x2="680" y2="140" class="k"/>
+    <path d="M90 140v4M174.3 140v4M258.6 140v4M342.9 140v4M427.1 140v4M511.4 140v4M595.7 140v4M680 140v4" class="k"/>
+    <g class="sm" text-anchor="middle"><text x="90" y="156">0</text><text x="174.3" y="156">2,000</text><text x="258.6" y="156">4,000</text><text x="342.9" y="156">6,000</text><text x="427.1" y="156">8,000</text><text x="511.4" y="156">10,000</text><text x="595.7" y="156">12,000</text><text x="680" y="156">14,000</text></g>
+
+    <text x="0" y="186" class="pl">(b) Tie branches, N-1 status at peak</text>
+    <g class="fa"><rect x="90" y="196" width="11" height="11"/><rect x="104" y="196" width="11" height="11"/><rect x="118" y="196" width="11" height="11"/></g>
+    <g class="fw">
+      <rect x="132" y="196" width="11" height="11"/><rect x="146" y="196" width="11" height="11"/><rect x="160" y="196" width="11" height="11"/><rect x="174" y="196" width="11" height="11"/><rect x="188" y="196" width="11" height="11"/><rect x="202" y="196" width="11" height="11"/><rect x="216" y="196" width="11" height="11"/><rect x="230" y="196" width="11" height="11"/><rect x="244" y="196" width="11" height="11"/><rect x="258" y="196" width="11" height="11"/>
+      <rect x="272" y="196" width="11" height="11"/><rect x="286" y="196" width="11" height="11"/><rect x="300" y="196" width="11" height="11"/><rect x="314" y="196" width="11" height="11"/><rect x="328" y="196" width="11" height="11"/><rect x="342" y="196" width="11" height="11"/><rect x="356" y="196" width="11" height="11"/><rect x="370" y="196" width="11" height="11"/><rect x="384" y="196" width="11" height="11"/><rect x="398" y="196" width="11" height="11"/>
+      <rect x="412" y="196" width="11" height="11"/><rect x="426" y="196" width="11" height="11"/><rect x="440" y="196" width="11" height="11"/><rect x="454" y="196" width="11" height="11"/><rect x="468" y="196" width="11" height="11"/><rect x="482" y="196" width="11" height="11"/><rect x="496" y="196" width="11" height="11"/><rect x="510" y="196" width="11" height="11"/><rect x="524" y="196" width="11" height="11"/><rect x="538" y="196" width="11" height="11"/>
+      <rect x="552" y="196" width="11" height="11"/><rect x="566" y="196" width="11" height="11"/><rect x="580" y="196" width="11" height="11"/><rect x="594" y="196" width="11" height="11"/><rect x="608" y="196" width="11" height="11"/><rect x="622" y="196" width="11" height="11"/><rect x="636" y="196" width="11" height="11"/><rect x="650" y="196" width="11" height="11"/><rect x="664" y="196" width="11" height="11"/>
+    </g>
+    <rect x="90" y="220" width="9" height="9" class="fa"/><text x="104" y="229" class="sm">binding (3)</text>
+    <rect x="176" y="220" width="9" height="9" class="fw"/><text x="190" y="229" class="sm">not binding (39)</text>
+  </svg>
+  </div>
+  <figcaption class="cap"><b>Figure 2.</b> Bay Area subnetwork of the ACTIVSg10k case, DC OPF with N-1 screening of 11,806 branch contingencies. (a) Peak load and the supply that meets it, to scale. (b) Each square is one tie branch to the rest of the Western Interconnection; order is not geographic.</figcaption>
+</figure>
+
+<p>The result reframes data center siting. A planned 100 MW load split across 3–4 substations, with a firm commitment to curtail in the hours when those 3 ties bind, adds less peak tie loading than the same load connected rigidly, and can be studied against an effective hosting limit above the static ICA figure.</p>
+
+<p>The market route for that commitment exists. FERC Order 2222 opened RTO and ISO energy, capacity, and ancillary markets to DER aggregations <span class="cite">[3]</span>, and new supply cannot close the gap alone: nearly 2,600 GW of generation and storage sat in US interconnection queues at the end of 2023 <span class="cite">[8]</span>. CAISO curtailed 2.8 TWh of renewable output in 2023 <span class="cite">[9]</span>, energy that flexible load at the right nodes and hours could have absorbed. Both routes fail at the same requirement. Dispatch must follow open standards and settlement must rest on audit-grade telemetry, while today each OEM exposes a proprietary cloud API that each aggregator integrates separately.</p>
+
+<h3 id="s1-3">Generation Capacity</h3>
+
+<p>LOLP and ELCC measure whether supply covers load under uncertainty. Data center load growth degrades LOLP even with no generator retirements. Distributed storage is the fastest addition to reserve margin, and incentive programs such as California's SGIP have already paid to install it, but ELCC credit requires demonstrated availability. A battery that cannot be dispatched and verified on demand contributes zero firm capacity at any nameplate rating.</p>
+
+<p>At all three layers the failure is identical: capacity that is physically installed cannot be counted. Counting it requires a valuation that states what each asset is worth, where it sits, and how certain the operator can be that it will respond.</p>
+
+<h2 id="s2">A Framework for Distributed Capacity Valuation</h2>
+
+<p>A four-dimension score turns heterogeneous public and private data into one capacity signal per asset or site (Table 1). The dimensions are mutually exclusive and together cover what an aggregator or ISO must know before bidding a distributed resource. In use they are not independent: data confidence multiplies the other three, because value that cannot be verified cannot be bid.</p>
+
+<div class="tbl" id="t1">
+  <div class="cap"><b>Table 1.</b> Four dimensions of distributed capacity value.</div>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Dimension</th><th>What it measures</th><th>Primary data sources</th><th>Unit</th></tr></thead>
+    <tbody>
+      <tr><td>Grid value</td><td>Maximum annual earnings across available flexibility programs, given device mix and location</td><td>OpenADR program catalogs, CAISO OASIS market prices, DSIRE incentive database</td><td>$/yr per household; $/kW-yr per site</td></tr>
+      <tr><td>Outage exposure</td><td>Area-level LOLP × household vulnerability: probability of supply interruption weighted by critical load</td><td>DOE EAGLE-I outage records, CPUC High Fire Threat District, Open-Meteo, substation telemetry</td><td>0–100 composite</td></tr>
+      <tr><td>Data confidence</td><td>Bayesian product of evidence sources, each decayed by equipment half-life; rises sharply at IEEE 2030.5 enrollment</td><td>Building permits, NAIP imagery, Green Button 15-minute interval data, IEEE 2030.5 enrollment discovery</td><td>0–100%; 53% before, 97% after enrollment</td></tr>
+      <tr><td>Transmission headroom</td><td>Available capacity at the nearest substation bus under N-1, corrected by real-time distribution transformer telemetry</td><td>PG&amp;E ICA map, ACTIVSg10k DC OPF per bus, real-time transformer loading</td><td>MW per bus, hourly</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<h3 id="s2-1">Grid Value and Data Confidence in a Community VPP</h3>
+
+<p>MCE's VPP tariff pays $5–$20 per device per month for enrolled flexible assets, with a $40 cap ($50 for CARE/FERA income-qualified households) <span class="cite">[10]</span>. An enrollment model of 360 synthetic households, seeded to Census ACS distributions on real building footprints in seven MCE communities, finds 113 households (31%) qualifying on devices already installed, holding 242 kW of flexible capacity. Mean data confidence before enrollment is 53%; IEEE 2030.5 device discovery at enrollment raises it to 97% per device. Weighted by confidence, bankable capacity rises from 128 kW to 235 kW, a 1.8× gain from verification alone (Figure 3). Scaled to MCE's 134,131 households, the model implies about 96 MW of addressable flexible capacity.</p>
+
+<figure class="fig" id="f3">
+  <div class="fig-scroll">
+  <svg viewBox="0 0 700 244" role="img" aria-label="Figure 3: modeled flexible capacity 242 kW; bankable capacity 128 kW before enrollment at 53 percent confidence and 235 kW after at 97 percent.">
+    <path d="M80 166H660M80 132H660M80 98H660M80 64H660M80 30H660" class="grid"/>
+    <line x1="80" y1="200" x2="660" y2="200" class="k"/>
+    <line x1="80" y1="30" x2="80" y2="200" class="k"/>
+    <g class="sm" text-anchor="end"><text x="74" y="204">0</text><text x="74" y="170">50</text><text x="74" y="136">100</text><text x="74" y="102">150</text><text x="74" y="68">200</text><text x="74" y="34">250</text></g>
+    <text x="22" y="115" text-anchor="middle" class="sm" transform="rotate(-90 22 115)">Capacity (kW)</text>
+    <rect x="150" y="35.4" width="100" height="164.6" class="f3"/>
+    <rect x="310" y="113" width="100" height="87" class="f2"/>
+    <rect x="470" y="40.2" width="100" height="159.8" class="fa"/>
+    <text x="200" y="29" text-anchor="middle" class="b">242</text>
+    <text x="360" y="107" text-anchor="middle" class="b">128</text>
+    <text x="520" y="34" text-anchor="middle" class="b">235</text>
+    <line x1="410" y1="113" x2="600" y2="113" class="g d"/>
+    <line x1="590" y1="113" x2="590" y2="40.2" class="k"/>
+    <path d="M585 113h10M585 40.2h10" class="k"/>
+    <text x="600" y="74">+107 kW</text><text x="600" y="89" class="sm">1.8× from</text><text x="600" y="102" class="sm">verification</text>
+    <g text-anchor="middle">
+      <text x="200" y="216">Modeled flexible</text><text x="200" y="230" class="sm">113 households</text>
+      <text x="360" y="216">Bankable, before</text><text x="360" y="230" class="sm">53% confidence</text>
+      <text x="520" y="216">Bankable, after</text><text x="520" y="230" class="sm">97% confidence</text>
+    </g>
+  </svg>
+  </div>
+  <figcaption class="cap"><b>Figure 3.</b> Community VPP enrollment model (360 synthetic households, 113 qualifying). Bankable capacity is modeled flexible capacity weighted by mean data confidence, before and after IEEE 2030.5 enrollment.</figcaption>
+</figure>
+
+<p>The value function is superadditive. A household with a battery, EV charger, and smart thermostat performs more reliably in events under joint dispatch than the same devices dispatched separately. A flat per-device tariff misprices that reliability; a per-kW structure closer to FERC 2222 wholesale settlement pays for it and strengthens the incentive to enroll.</p>
+
+<h3 id="s2-2">Site Scoring for Distributed Storage</h3>
+
+<p>At C&amp;I and data center scale the same framework produces four outputs per candidate site: <code>capacity_mw</code>, <code>deploy_weeks</code>, <code>cost_usd_kw</code>, and <code>revenue_usd_kw_yr</code>. Revenue combines tariff savings, SGIP incentive annuity, CAISO capacity clearing prices, and demand response payouts, each contingent on verified delivery. Inputs are 21 datasets across five tracks: geospatial, community and policy, energy markets, cloud demand, and building models. Transmission headroom enters the revenue term directly, so a site next to a constrained substation with active ISO demand response programs scores higher revenue and shorter deployment.</p>
+
+<p>The confidence gap is therefore a protocol gap. At 53% confidence, nearly half of the modeled 242 kW cannot be bid as firm capacity, because the operator cannot verify what is installed or whether it will respond, and no device discovery protocol works across manufacturers without per-vendor integration. Closing the gap requires a common protocol layer at the device itself.</p>
+
+<h2 id="s3">Open-Standards Infrastructure as the Capacity Commons</h2>
+
+<p>Valuation states what capacity is worth; dispatch infrastructure determines whether it can be reached, verified, and traded. IEEE 2030.5 on an open edge gateway plays the role for DERs that TCP/IP played for networked computers: one protocol layer that makes any asset legible to any platform, independent of manufacturer.</p>
+
+<h3 id="s3-1">The Standards Stack</h3>
+
+<p>Four instruments define the chain from device to market (Table 2). A gateway that carries capacity from a household to a wholesale settlement must satisfy all four at once.</p>
+
+<div class="tbl" id="t2">
+  <div class="cap"><b>Table 2.</b> Standards and rules in the dispatch chain.</div>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Standard</th><th>Role in the dispatch chain</th><th>Compliance trigger</th></tr></thead>
+    <tbody>
+      <tr><td>IEEE 2030.5 / SEP2 <span class="cite">[4]</span></td><td>Utility-to-DER communication over mTLS. Client role northbound to a utility or aggregator DERMS; server role southbound to native 2030.5 devices.</td><td>Default protocol for utility-DER communication under CPUC Rule 21 (CSIP) <span class="cite">[7]</span></td></tr>
+      <tr><td>IEEE 1547-2018 <span class="cite">[5]</span></td><td>Interconnection function set: Volt-VAR, Volt-Watt, frequency-Watt, ride-through, ramp rate, implemented southbound.</td><td>Referenced by CPUC Rule 21 and a growing set of state interconnection tariffs; certified through UL 1741 SB</td></tr>
+      <tr><td>OpenADR 2.0b / 3.0 <span class="cite">[6]</span></td><td>Demand response event signalling between the aggregator's VTN and the site's VEN.</td><td>Used by MCE, PG&amp;E, and SDG&amp;E demand response programs</td></tr>
+      <tr><td>FERC Order 2222 <span class="cite">[3]</span></td><td>Admits DER aggregations to RTO/ISO energy, capacity, and ancillary markets, subject to ISO telemetry, metering, and audit requirements.</td><td>Issued 2020; RTO/ISO implementation staged through the late 2020s</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<h3 id="s3-2">The Bidirectionality Problem</h3>
+
+<p>The decisive architectural property is bidirectionality. Production gateways implement one IEEE 2030.5 role: either the client that answers a utility server or the server that manages client devices. A gateway that holds both roles (Figure 4) acts as a client to the utility or aggregator DERMS while serving as the 2030.5 server for devices on site. One firmware image then fits rooftop solar, utility-scale BESS, EV charging, and distribution transformer monitoring without per-site integration.</p>
+
+<figure class="fig" id="f4">
+  <div class="fig-scroll">
+  <svg viewBox="0 0 700 310" role="img" aria-label="Figure 4: one edge gateway translates SunSpec Modbus, CAN 2.0B, OCPP, DNP3 and IEEE 2030.5 device traffic into a canonical DER model, applies IEEE 1547 functions, and speaks IEEE 2030.5, OpenADR and signed telemetry northbound.">
+    <defs><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs>
+    <text x="70" y="14" text-anchor="middle" class="pl">Devices</text>
+    <text x="335" y="14" text-anchor="middle" class="pl">Gateway</text>
+    <text x="621" y="14" text-anchor="middle" class="pl">Grid and market</text>
+
+    <rect x="8" y="41" width="124" height="34" class="box"/><text x="70" y="62" text-anchor="middle">Solar inverter</text>
+    <rect x="8" y="93" width="124" height="34" class="box"/><text x="70" y="114" text-anchor="middle">Battery BMS</text>
+    <rect x="8" y="145" width="124" height="34" class="box"/><text x="70" y="166" text-anchor="middle">EV charger</text>
+    <rect x="8" y="197" width="124" height="34" class="box"/><text x="70" y="218" text-anchor="middle">Legacy IED</text>
+    <rect x="8" y="249" width="124" height="34" class="box"/><text x="70" y="270" text-anchor="middle">2030.5 device</text>
+    <g class="k">
+      <line x1="134" y1="58" x2="218" y2="58" marker-start="url(#m4)" marker-end="url(#m4)"/>
+      <line x1="134" y1="110" x2="218" y2="110" marker-start="url(#m4)" marker-end="url(#m4)"/>
+      <line x1="134" y1="162" x2="218" y2="162" marker-start="url(#m4)" marker-end="url(#m4)"/>
+      <line x1="134" y1="214" x2="218" y2="214" marker-start="url(#m4)" marker-end="url(#m4)"/>
+      <line x1="134" y1="266" x2="218" y2="266" marker-start="url(#m4)" marker-end="url(#m4)"/>
+    </g>
+    <g class="sm" text-anchor="middle"><text x="176" y="51">SunSpec Modbus</text><text x="176" y="103">CAN 2.0B</text><text x="176" y="155">OCPP</text><text x="176" y="207">DNP3</text><text x="176" y="259">2030.5 (server)</text></g>
+
+    <rect x="220" y="26" width="230" height="276" class="boxs"/>
+    <rect x="236" y="40" width="198" height="40" class="box"/><text x="335" y="57" text-anchor="middle">Protocol translation</text><text x="335" y="72" text-anchor="middle" class="sm">5 southbound adapters</text>
+    <rect x="236" y="96" width="198" height="40" class="box"/><text x="335" y="113" text-anchor="middle">Canonical DER model</text><text x="335" y="128" text-anchor="middle" class="sm">one schema for every OEM</text>
+    <rect x="236" y="152" width="198" height="40" class="box"/><text x="335" y="169" text-anchor="middle">IEEE 1547-2018 functions</text><text x="335" y="184" text-anchor="middle" class="sm">Volt-VAR, Volt-Watt, frequency-Watt</text>
+    <rect x="236" y="208" width="198" height="40" class="box"/><text x="335" y="225" text-anchor="middle">TEE identity, mTLS</text><text x="335" y="240" text-anchor="middle" class="sm">per-device keys, signed records</text>
+    <path d="M335 80v16M335 136v16M335 192v16" class="k"/>
+    <text x="335" y="282" text-anchor="middle" class="sm">one firmware image for every site type</text>
+
+    <g class="k">
+      <line x1="452" y1="82" x2="548" y2="82" marker-start="url(#m4)" marker-end="url(#m4)"/>
+      <line x1="452" y1="162" x2="548" y2="162" marker-start="url(#m4)" marker-end="url(#m4)"/>
+      <line x1="452" y1="242" x2="548" y2="242" marker-end="url(#m4)"/>
+    </g>
+    <g class="sm" text-anchor="middle"><text x="500" y="74">2030.5 (client)</text><text x="500" y="154">OpenADR VEN</text><text x="500" y="234">signed telemetry</text></g>
+    <rect x="550" y="62" width="142" height="40" class="box"/><text x="621" y="79" text-anchor="middle">Utility DERMS</text><text x="621" y="94" text-anchor="middle" class="sm">Rule 21 server</text>
+    <rect x="550" y="142" width="142" height="40" class="box"/><text x="621" y="159" text-anchor="middle">Aggregator</text><text x="621" y="174" text-anchor="middle" class="sm">OpenADR VTN</text>
+    <rect x="550" y="222" width="142" height="40" class="box"/><text x="621" y="239" text-anchor="middle">ISO settlement</text><text x="621" y="254" text-anchor="middle" class="sm">FERC 2222</text>
+  </svg>
+  </div>
+  <figcaption class="cap"><b>Figure 4.</b> Bidirectional gateway architecture. The gateway is a 2030.5 server to equipment on site and a 2030.5 client to the utility, so one image can sit on either side of an integration. Double-headed arrows carry both control and telemetry.</figcaption>
+</figure>
+
+<p>Southbound diversity is absorbed by a translation engine: SunSpec Modbus to inverters, CAN 2.0B to the battery management system for cell-level telemetry, OCPP to EV chargers, and DNP3 to legacy monitoring IEDs. A canonical DER model normalizes all of them, so no DR platform, DERMS, or ISO settlement system needs to know the manufacturer. Under FERC 2222 the ISO therefore receives telemetry in one format for every asset in an aggregation.</p>
+
+<h3 id="s3-3">Why Edge Beats Cloud</h3>
+
+<p>The alternative is OEM-cloud dispatch, in which each manufacturer presents IEEE 2030.5 northbound from its cloud. It fails grid operations in four ways: rate limits make real-time dispatch unreliable; telemetry leaves the jurisdiction; the OEM can revoke API access unilaterally; and one compromised cloud reaches every asset on the platform. An edge gateway with a Trusted Execution Environment (TEE) removes all four (Figure 5). Each device holds its own cryptographic identity, so a compromise stays inside one site. Telemetry is processed on site and only normalized event data leaves. The asset operator owns the gateway outright, so no third party can revoke access.</p>
+
+<figure class="fig" id="f5">
+  <div class="fig-scroll">
+  <svg viewBox="0 0 700 270" role="img" aria-label="Figure 5: in OEM-cloud dispatch one cloud fans out to every device, so a compromise reaches all assets; with edge gateways each site has its own identity and a compromise stays inside one site.">
+    <defs><marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs>
+    <line x1="350" y1="4" x2="350" y2="266" class="grid"/>
+    <text x="0" y="14" class="pl">(a) OEM-cloud dispatch</text>
+    <text x="366" y="14" class="pl">(b) Edge-gateway dispatch</text>
+
+    <rect x="115" y="30" width="120" height="30" class="box"/><text x="175" y="50" text-anchor="middle">DERMS</text>
+    <line x1="175" y1="60" x2="175" y2="104" class="k" marker-end="url(#m5)"/>
+    <text x="185" y="84" class="sm">rate-limited, revocable API</text>
+    <rect x="105" y="106" width="140" height="34" class="boxd"/><text x="175" y="128" text-anchor="middle" class="b">OEM cloud</text>
+    <g class="k2 d"><line x1="175" y1="140" x2="40" y2="198"/><line x1="175" y1="140" x2="94" y2="198"/><line x1="175" y1="140" x2="148" y2="198"/><line x1="175" y1="140" x2="202" y2="198"/><line x1="175" y1="140" x2="256" y2="198"/><line x1="175" y1="140" x2="310" y2="198"/></g>
+    <g class="boxd"><rect x="18" y="198" width="44" height="22"/><rect x="72" y="198" width="44" height="22"/><rect x="126" y="198" width="44" height="22"/><rect x="180" y="198" width="44" height="22"/><rect x="234" y="198" width="44" height="22"/><rect x="288" y="198" width="44" height="22"/></g>
+    <g class="sm" text-anchor="middle"><text x="40" y="213">DER</text><text x="94" y="213">DER</text><text x="148" y="213">DER</text><text x="202" y="213">DER</text><text x="256" y="213">DER</text><text x="310" y="213">DER</text></g>
+    <text x="175" y="242" text-anchor="middle">Compromise reaches every asset</text>
+    <text x="175" y="258" text-anchor="middle" class="sm">telemetry leaves the site and jurisdiction</text>
+
+    <rect x="465" y="30" width="120" height="30" class="box"/><text x="525" y="50" text-anchor="middle">DERMS</text>
+    <g class="k"><line x1="525" y1="60" x2="420" y2="104"/><line x1="525" y1="60" x2="525" y2="104"/><line x1="525" y1="60" x2="630" y2="104"/></g>
+    <rect x="378" y="104" width="84" height="38" class="boxs"/><text x="420" y="121" text-anchor="middle" class="b">Gateway</text><text x="420" y="135" text-anchor="middle" class="sm">TEE, mTLS</text>
+    <rect x="483" y="104" width="84" height="38" class="boxs"/><text x="525" y="121" text-anchor="middle" class="b">Gateway</text><text x="525" y="135" text-anchor="middle" class="sm">TEE, mTLS</text>
+    <rect x="588" y="104" width="84" height="38" class="boxd"/><text x="630" y="121" text-anchor="middle" class="b">Gateway</text><text x="630" y="135" text-anchor="middle" class="sm">compromised</text>
+    <g class="k"><line x1="420" y1="142" x2="393" y2="198"/><line x1="420" y1="142" x2="447" y2="198"/><line x1="525" y1="142" x2="498" y2="198"/><line x1="525" y1="142" x2="552" y2="198"/></g>
+    <g class="k2 d"><line x1="630" y1="142" x2="603" y2="198"/><line x1="630" y1="142" x2="657" y2="198"/></g>
+    <g class="box"><rect x="371" y="198" width="44" height="22"/><rect x="425" y="198" width="44" height="22"/><rect x="476" y="198" width="44" height="22"/><rect x="530" y="198" width="44" height="22"/></g>
+    <g class="boxd"><rect x="581" y="198" width="44" height="22"/><rect x="635" y="198" width="44" height="22"/></g>
+    <g class="sm" text-anchor="middle"><text x="393" y="213">DER</text><text x="447" y="213">DER</text><text x="498" y="213">DER</text><text x="552" y="213">DER</text><text x="603" y="213">DER</text><text x="657" y="213">DER</text></g>
+    <text x="525" y="242" text-anchor="middle">Compromise stays inside one site</text>
+    <text x="525" y="258" text-anchor="middle" class="sm">only normalized event data leaves the site</text>
+  </svg>
+  </div>
+  <figcaption class="cap"><b>Figure 5.</b> Failure domains. Shaded elements and dashed links are reachable from a single compromise. (a) Every asset sits behind one node the grid operator does not control. (b) Each site holds its own identity, so the reach of a compromise is one site.</figcaption>
+</figure>
+
+<h3 id="s3-4">Network Effects of Standardization</h3>
+
+<p>Once each DER speaks IEEE 2030.5 through an open gateway, any operator, aggregator, or DR platform can discover and transact with it without a bilateral integration agreement. Each enrolled asset enlarges the flexibility pool available to every participant, so value accrues to the shared layer rather than to one application. A commons makes flexibility tradeable, but trade needs a buyer that will pay for capacity at a specific node and hour, and until recently no such buyer existed at scale.</p>
+
+<h2 id="s4">Data Center Flexibility as the Forcing Function</h2>
+
+<p>Data centers are that buyer. A large load waiting on interconnection values node- and hour-specific flexibility at transmission rates, which gives the open dispatch layer a revenue anchor that residential demand response never provided.</p>
+
+<h3 id="s4-1">The Siting Problem as a Power Flow Problem</h3>
+
+<p>For a 100 MW load in the Bay Area subnetwork, the binding elements are the 3 tie branches identified in Section 1.2, and splitting the load across 3–4 substations lowers the peak contribution on any one of them. The node model has three terms: contracted capacity at each substation, unused capacity tradeable only within the node, and branch thermal limit as the hard constraint. A flexibility contract's value to the system operator follows from the loss-of-load expectation (LOLE) it removes over the operating year, so a commitment to curtail on named branches in named hours is worth more than generic demand response.</p>
+
+<p>The contract is two-sided. The data center interconnects earlier because enrolled flexible capacity raises effective hosting capacity on the constrained feeder; the aggregator gains a firm counterparty for committed capacity. One gateway serves both sides: the device that executes the VPP dispatch also produces the record the ISO settles against (Figure 6).</p>
+
+<figure class="fig" id="f6">
+  <div class="fig-scroll">
+  <svg viewBox="0 0 700 516" role="img" aria-label="Figure 6: sequence of one dispatch event, from the data center flexibility contract through ISO award, OpenADR event, device setpoint, signed telemetry and settlement to payment.">
+    <defs><marker id="m6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs>
+    <rect x="10" y="6" width="120" height="40" class="box"/><text x="70" y="23" text-anchor="middle" class="b">Data center</text><text x="70" y="38" text-anchor="middle" class="sm">large load</text>
+    <rect x="150" y="6" width="120" height="40" class="box"/><text x="210" y="23" text-anchor="middle" class="b">CAISO</text><text x="210" y="38" text-anchor="middle" class="sm">ISO market</text>
+    <rect x="290" y="6" width="120" height="40" class="box"/><text x="350" y="23" text-anchor="middle" class="b">Aggregator</text><text x="350" y="38" text-anchor="middle" class="sm">DERMS, VTN</text>
+    <rect x="430" y="6" width="120" height="40" class="boxs"/><text x="490" y="23" text-anchor="middle" class="b">Edge gateway</text><text x="490" y="38" text-anchor="middle" class="sm">VEN, 2030.5</text>
+    <rect x="570" y="6" width="120" height="40" class="box"/><text x="630" y="23" text-anchor="middle" class="b">DER</text><text x="630" y="38" text-anchor="middle" class="sm">BESS, inverter</text>
+    <g class="g d"><line x1="70" y1="46" x2="70" y2="508"/><line x1="210" y1="46" x2="210" y2="508"/><line x1="350" y1="46" x2="350" y2="508"/><line x1="490" y1="46" x2="490" y2="508"/><line x1="630" y1="46" x2="630" y2="508"/></g>
+
+    <line x1="70" y1="88" x2="348" y2="88" class="k" marker-end="url(#m6)"/>
+    <text x="78" y="81"><tspan class="b">1</tspan>  Flexibility contract: MW on binding ties, peak hours</text>
+    <line x1="210" y1="130" x2="348" y2="130" class="k" marker-end="url(#m6)"/>
+    <text x="218" y="123"><tspan class="b">2</tspan>  Day-ahead award</text>
+    <line x1="350" y1="172" x2="488" y2="172" class="k" marker-end="url(#m6)"/>
+    <text x="358" y="165"><tspan class="b">3</tspan>  OpenADR event</text>
+    <line x1="490" y1="214" x2="628" y2="214" class="k" marker-end="url(#m6)"/>
+    <text x="498" y="207"><tspan class="b">4</tspan>  kW setpoint</text>
+    <text x="498" y="229" class="sm">SunSpec Modbus</text>
+    <line x1="630" y1="260" x2="492" y2="260" class="k d" marker-end="url(#m6)"/>
+    <text x="498" y="253"><tspan class="b">5</tspan>  Response telemetry</text>
+    <text x="498" y="275" class="sm">CAN 2.0B, Modbus</text>
+    <path d="M490 296H522V328H492" class="k" marker-end="url(#m6)"/>
+    <text x="530" y="310"><tspan class="b">6</tspan>  IEEE 1547 check</text>
+    <text x="530" y="325" class="sm">TEE signs record</text>
+    <line x1="490" y1="364" x2="352" y2="364" class="k" marker-end="url(#m6)"/>
+    <text x="358" y="357"><tspan class="b">7</tspan>  Signed telemetry</text>
+    <text x="358" y="379" class="sm">2030.5 over mTLS</text>
+    <line x1="350" y1="410" x2="212" y2="410" class="k" marker-end="url(#m6)"/>
+    <text x="218" y="403"><tspan class="b">8</tspan>  Settlement data</text>
+    <text x="218" y="425" class="sm">FERC 2222 aggregation</text>
+    <line x1="210" y1="460" x2="348" y2="460" class="k d" marker-end="url(#m6)"/>
+    <text x="218" y="453"><tspan class="b">9</tspan>  Capacity payment</text>
+    <line x1="350" y1="498" x2="72" y2="498" class="k d" marker-end="url(#m6)"/>
+    <text x="78" y="491"><tspan class="b">10</tspan>  Delivered MW by tie and hour</text>
+  </svg>
+  </div>
+  <figcaption class="cap"><b>Figure 6.</b> Sequence of one dispatch event. Solid arrows are instructions and data; dashed arrows are responses and payments. The gateway that executes step 4 also produces the signed record used in step 8, so dispatch and settlement rest on the same data.</figcaption>
+</figure>
+
+<h3 id="s4-2">Revenue Architecture Across Three Capacity Markets</h3>
+
+<p>One enrolled gateway reaches three markets (Table 3). For a 1 MW battery, ISO capacity and ancillary streams sum to $70–$230/kW-yr before energy margin (Figure 7); for a single household, the per-device distribution stream of $60–$240 per year is the only one accessible. Stacking is bounded by state of charge, since a kilowatt held for regulation cannot also be discharged for a capacity event, so realized revenue depends on co-optimized scheduling rather than simple addition.</p>
+
+<div class="tbl" id="t3">
+  <div class="cap"><b>Table 3.</b> Revenue available to an enrolled asset, by market.</div>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Market</th><th>Mechanism</th><th>Qualifying requirement</th><th>Revenue estimate</th></tr></thead>
+    <tbody>
+      <tr><td>Distribution DR</td><td>CCA VPP (MCE VPP Tariff, Appendix 1, RFP 2026-03)</td><td>OpenADR-compliant enrolled device; 15-minute telemetry</td><td class="num">$60–$240/device-yr</td></tr>
+      <tr><td>Transmission / ISO</td><td>CAISO Day-Ahead and Real-Time markets; FERC 2222 capacity markets</td><td>IEEE 2030.5 dispatch; audit-grade settlement telemetry; FERC 2222 aggregation registration</td><td class="num">$50–$150/kW-yr</td></tr>
+      <tr><td>Ancillary services</td><td>CAISO regulation up/down, spinning and non-spinning reserves</td><td>Sub-second telemetry; 4–10 minute response; ELCC-credited resource</td><td class="num">$20–$80/kW-yr</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<figure class="fig" id="f7">
+  <div class="fig-scroll">
+  <svg viewBox="0 0 700 216" role="img" aria-label="Figure 7: ISO capacity 50 to 150 dollars per kW-year, ancillary 20 to 80, combined for a 1 MW battery 70 to 230, infrastructure deferral 30 to 80.">
+    <path d="M328 20V176M416 20V176M504 20V176M592 20V176M680 20V176" class="grid"/>
+    <line x1="240" y1="20" x2="240" y2="176" class="k"/>
+    <text x="0" y="44">ISO capacity (FERC 2222)</text>
+    <path d="M328 40H504M328 34v12M504 34v12" class="k2"/><text x="512" y="44" class="sm">50–150</text>
+    <text x="0" y="80">Ancillary services</text>
+    <path d="M275.2 76H380.8M275.2 70v12M380.8 70v12" class="k2"/><text x="388.8" y="80" class="sm">20–80</text>
+    <text x="0" y="116" class="b">Capacity + ancillary, 1 MW BESS</text>
+    <text x="0" y="130" class="sm">upper bound before state-of-charge limits</text>
+    <rect x="363.2" y="106" width="281.6" height="14" class="fa"/><text x="652.8" y="117" class="sm">70–230</text>
+    <text x="0" y="158">Infrastructure deferral</text>
+    <text x="0" y="172" class="sm">utility value, Section 5.3</text>
+    <path d="M292.8 154H380.8M292.8 148v12M380.8 148v12" class="g" style="stroke-width:1.6"/><text x="388.8" y="158" class="sm">30–80</text>
+    <line x1="240" y1="176" x2="680" y2="176" class="k"/>
+    <path d="M240 176v4M328 176v4M416 176v4M504 176v4M592 176v4M680 176v4" class="k"/>
+    <g class="sm" text-anchor="middle"><text x="240" y="192">0</text><text x="328" y="192">50</text><text x="416" y="192">100</text><text x="504" y="192">150</text><text x="592" y="192">200</text><text x="680" y="192">250</text></g>
+    <text x="460" y="210" text-anchor="middle" class="sm">Revenue ($/kW-yr)</text>
+  </svg>
+  </div>
+  <figcaption class="cap"><b>Figure 7.</b> Per-kW revenue ranges on one scale. The distribution stream is priced per device ($60–$240/yr) and is not shown on this axis.</figcaption>
+</figure>
+
+<p>The same dispatch that settles a flexibility contract also changes which generator runs at the margin, which is where the climate effect originates.</p>
+
+<h2 id="s5">Climate Impact</h2>
+
+<p>The climate effect runs through three pathways that differ in timescale and size (Table 4, Figure 8). All three scale with the number of enrolled, verified assets.</p>
+
+<h3 id="s5-1">Direct Dispatch Displacement</h3>
+
+<p>Dispatched flexibility displaces marginal generation, in WECC predominantly gas peakers at 0.4–0.7 tCO₂e/MWh. At 100,000 enrolled assets averaging 25 kW (about 2.5 GW), direct displacement is estimated at 0.15–0.20 MtCO₂e/yr. Back-calculated, that range implies 210–500 GWh of displaced peaker output per year, or 85–200 full-capacity hours, a conservative assumption relative to daily cycling.</p>
+
+<h3 id="s5-2">Renewable Curtailment Reduction</h3>
+
+<p>CAISO curtailed 2.8 TWh of renewable output in 2023 <span class="cite">[9]</span>. Each TWh absorbed by flexible load instead of curtailed avoids about 0.5 MtCO₂e of gas generation, so full recovery would be worth 1.4 MtCO₂e/yr. The transmission headroom dimension of the capacity score identifies which sites sit at the constrained nodes where curtailment occurs, so deployment can be targeted there first.</p>
+
+<h3 id="s5-3">Infrastructure Deferral</h3>
+
+<p>Hosting capacity measured from real-time distribution transformer telemetry lets utilities defer substation and transformer upgrades by 3–5 years per constrained feeder, valued at $30–$80 per kW of unlocked hosting capacity per year. Deferral avoids the embedded carbon of early equipment replacement and frees capital for renewable interconnection. Measured headroom also shortens the 12–24 month interconnection reviews that delay solar and storage projects.</p>
+
+<div class="tbl" id="t4">
+  <div class="cap"><b>Table 4.</b> Climate pathways and their scale conditions.</div>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Pathway</th><th>Scale condition</th><th>Annual impact</th></tr></thead>
+    <tbody>
+      <tr><td>Direct dispatch displacement</td><td>100K assets, 25 kW average, daily cycling</td><td class="num">0.15–0.20 MtCO₂e/yr</td></tr>
+      <tr><td>Renewable curtailment reduction</td><td>Per TWh of curtailment absorbed (2.8 TWh in 2023)</td><td class="num">~0.5 MtCO₂e/TWh</td></tr>
+      <tr><td>Infrastructure deferral</td><td>3–5 years deferred per constrained feeder</td><td>Embedded carbon plus unlocked renewable interconnection</td></tr>
+      <tr><td>System level</td><td>100K assets; direct, curtailment, and deferral combined</td><td class="num">≈5× direct: 0.75–1.0 MtCO₂e/yr</td></tr>
+      <tr><td>Long run (global open protocol)</td><td>Universal DER dispatch layer across 100M+ deployed DERs</td><td class="num">0.4–0.5 GtCO₂e/yr</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<figure class="fig" id="f8">
+  <div class="fig-scroll">
+  <svg viewBox="0 0 700 186" role="img" aria-label="Figure 8: direct dispatch 0.15 to 0.20 MtCO2e per year, system level 0.75 to 1.0, and a 1.4 Mt ceiling if all 2023 CAISO curtailment were recovered.">
+    <path d="M386.7 16V148M533.3 16V148M680 16V148" class="grid"/>
+    <line x1="240" y1="16" x2="240" y2="148" class="k"/>
+    <text x="0" y="40">Direct dispatch</text><text x="0" y="54" class="sm">100K assets, 2.5 GW</text>
+    <rect x="284" y="30" width="14.7" height="14" class="f2"/><text x="306" y="41" class="sm">0.15–0.20</text>
+    <text x="0" y="86" class="b">System level, ≈5× direct</text><text x="0" y="100" class="sm">adds curtailment and deferral</text>
+    <rect x="460" y="76" width="73.3" height="14" class="fa"/><text x="541" y="87" class="sm">0.75–1.0</text>
+    <text x="0" y="128">Curtailment ceiling</text><text x="0" y="142" class="sm">all 2.8 TWh recovered</text>
+    <line x1="240" y1="125" x2="646" y2="125" class="g d"/><path d="M650.7 119l5 6-5 6-5-6z" class="mk"/><text x="662" y="129" class="sm">1.4</text>
+    <line x1="240" y1="148" x2="680" y2="148" class="k"/>
+    <path d="M240 148v4M386.7 148v4M533.3 148v4M680 148v4" class="k"/>
+    <g class="sm" text-anchor="middle"><text x="240" y="164">0</text><text x="386.7" y="164">0.5</text><text x="533.3" y="164">1.0</text><text x="680" y="164">1.5</text></g>
+    <text x="460" y="182" text-anchor="middle" class="sm">Emissions avoided (MtCO₂e/yr)</text>
+  </svg>
+  </div>
+  <figcaption class="cap"><b>Figure 8.</b> Climate effect at 100,000 enrolled assets, on one scale. The curtailment ceiling bounds what flexibility can recover in CAISO at 2023 curtailment levels.</figcaption>
+</figure>
+
+<p>The long-run figure follows from the per-asset system effect. At 100,000 assets the system level corresponds to 7.5–10 tCO₂e per asset per year. Applied to the more than 100 million DERs already deployed worldwide at half that intensity, to reflect smaller average asset size, the effect reaches 0.4–0.5 GtCO₂e/yr. The rate-limiting step is adoption of an open dispatch layer, not hardware: the assets exist, and the coordination infrastructure to activate them does not. Every pathway therefore runs through one step in the stack that has not yet been demonstrated at utility grade.</p>
+
+<h2 id="s6">Evidence and Current Stage</h2>
+
+<h3 id="s6-1">Evidence from the Analyses</h3>
+
+<p>Three analyses support the argument, each addressing a different link. The power flow study establishes that the transmission constraint is concentrated: 3 of 42 ties bind at peak in a subnetwork importing 36% of its peak load, so flexibility is valuable at specific branches and hours rather than everywhere. The enrollment model establishes that verification, not device count, limits usable capacity: bankable capacity rises 1.8× at enrollment with no new devices, and about 96 MW is addressable in one CCA territory. The site-scoring model establishes that transmission headroom enters revenue directly, linking the physical constraint to the market signal.</p>
+
+<p>Each result carries a stated limitation. ACTIVSg10k is a synthetic network, and DC OPF omits losses and voltage limits, so the binding set should be confirmed with AC power flow on utility planning cases. The household population is synthetic, seeded to ACS distributions, and the 53% and 97% confidence levels are model outputs that require validation against metered enrollment data. The climate estimates rest on marginal emission factors and dispatch-hour assumptions given in Section 5.</p>
+
+<h3 id="s6-2">Why the Gap Persists</h3>
+
+<p>Three conditions keep the market from closing the gap on its own:</p>
+<ol class="reasons">
+  <li><b>Misaligned incentives.</b> A proprietary cloud API is a retention asset for a device manufacturer, so no OEM gains from building a neutral layer that lets customers switch aggregators.</li>
+  <li><b>Diffuse value.</b> The benefit of a common layer is split among utilities, ISOs, aggregators, and customers, and no single party captures enough of it to fund the layer.</li>
+  <li><b>Fixed certification burden.</b> Utility-grade certification of both 2030.5 roles against a CPUC-approved DERMS is a fixed effort that single-role products have had no reason to undertake.</li>
+</ol>
+
+<h3 id="s6-3">Open Research Questions</h3>
+
+<p>The architecture is specified and the analyses above are complete. Three questions remain open, and resolving the first removes the last technical barrier to FERC 2222 participation for sub-MW aggregations:</p>
+<ol class="reasons">
+  <li>Can the full bidirectional IEEE 2030.5 handshake, client and server roles in one device, be certified at utility grade against a CPUC-approved DERMS?</li>
+  <li>How much effective hosting capacity does verified, dispatchable flexibility add on a constrained feeder under hourly AC power flow, relative to the static ICA limit?</li>
+  <li>What ELCC does a verified aggregation of small DERs earn relative to its nameplate, and how does that credit change with data confidence?</li>
+</ol>
+
+<h2 class="unnum" id="refs">References</h2>
+<ol class="refs">
+  <li>A. B. Birchfield, T. Xu, K. M. Gegner, K. S. Shetye, and T. J. Overbye, "Grid structural characteristics as validation criteria for synthetic networks," <i>IEEE Trans. Power Syst.</i>, vol. 32, no. 4, pp. 3258–3265, 2017.</li>
+  <li>R. D. Zimmerman, C. E. Murillo-Sánchez, and R. J. Thomas, "MATPOWER: Steady-state operations, planning, and analysis tools for power systems research and education," <i>IEEE Trans. Power Syst.</i>, vol. 26, no. 1, pp. 12–19, 2011.</li>
+  <li>Federal Energy Regulatory Commission, Order No. 2222, <i>Participation of Distributed Energy Resource Aggregations in Markets Operated by Regional Transmission Organizations and Independent System Operators</i>, 172 FERC ¶ 61,247, 2020.</li>
+  <li>IEEE Std 2030.5-2018, <i>IEEE Standard for Smart Energy Profile Application Protocol</i>.</li>
+  <li>IEEE Std 1547-2018, <i>IEEE Standard for Interconnection and Interoperability of Distributed Energy Resources with Associated Electric Power Systems Interfaces</i>.</li>
+  <li>OpenADR Alliance, <i>OpenADR 2.0b Profile Specification</i> and <i>OpenADR 3.0 Specification</i>.</li>
+  <li>California Public Utilities Commission, Electric Rule 21; California Smart Inverter Working Group, <i>Common Smart Inverter Profile (CSIP)</i>.</li>
+  <li>J. Rand et al., <i>Queued Up: 2024 Edition</i>, Lawrence Berkeley National Laboratory, 2024.</li>
+  <li>California ISO, curtailment data, "Managing Oversupply," 2023.</li>
+  <li>MCE, RFP 2026-03, Appendix 1: VPP Tariff.</li>
+  <li>Pacific Gas and Electric, Integration Capacity Analysis (ICA) map.</li>
+</ol>
+<p class="datanote">Additional data: US Census ACS 2024 5-year estimates; DOE EAGLE-I; CPUC High Fire Threat District GIS; NREL ComStock 2023; DSIRE; EIA-860/861; CAISO OASIS; SGIP; NAIP imagery; Open-Meteo; ESA WorldCover 2021; OpenStreetMap building footprints. Power flow solved in GNU Octave 11.3 with MATPOWER 8.0. All household data are synthetic; no personal data were used.</p>
+
+</main>
+
+<div class="page-line"><span>Arham Shah · Stanford University</span><span>November 2026</span></div>
+
+</article>
+
+<script>
+(function () {
+  var links = document.querySelectorAll('.side a');
+  if (!('IntersectionObserver' in window) || !links.length) return;
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        links.forEach(function (a) { a.classList.remove('on'); });
+        var a = map[e.target.id]; if (a) a.classList.add('on');
+      }
+    });
+  }, { rootMargin: '0px 0px -70% 0px' });
+  Object.keys(map).forEach(function (id) { var el = document.getElementById(id); if (el) io.observe(el); });
+})();
+</script>
+
+</body>
+</html>
